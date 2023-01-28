@@ -21,17 +21,10 @@ static int thread_main(void *arg)
 {
 	uint32_t thread_id = (int)(long)(arg);
   printf("Worker main\n");
-#if 0
-	printf("Thread id is %d and pipelines are tx %d rx %d\n", thread_id,
-	       TX_PIPELINE_THREAD_ID, RX_PIPELINE_THREAD_ID);
 
-	if (thread_id == RX_PIPELINE_THREAD_ID)
-		recv_pipeline_main((void *)(long)thread_id);
-	else if (thread_id == TX_PIPELINE_THREAD_ID)
-		send_pipeline_main((void *)(long)thread_id);
-	else
-		worker_main((void *)(long)thread_id);
-#endif
+  /* Start plugging your logic here */
+  while(!force_quit)
+    dpdk_poll();
 
 	return 0;
 }
