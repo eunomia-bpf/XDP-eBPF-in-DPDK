@@ -1,0 +1,6 @@
+{
+    "files.associations": {
+        "optional": "cpp",
+        "cinttypes": "cpp"
+    }
+}

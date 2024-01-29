@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <signal.h>
+#include <xdp-runtime.h>
 
 #include <rte_lcore.h>
 
@@ -10,9 +11,10 @@ RTE_DEFINE_PER_LCORE(int, queue_id);
 
 static void signal_handler(int signum)
 {
-	if (signum == SIGINT || signum == SIGTERM) {
+	if (signum == SIGINT || signum == SIGTERM)
+	{
 		printf("\n\nSignal %d received, preparing to exit...\n",
-		       signum);
+			   signum);
 		force_quit = true;
 	}
 }
@@ -20,11 +22,11 @@ static void signal_handler(int signum)
 static int thread_main(void *arg)
 {
 	uint32_t thread_id = (int)(long)(arg);
-  printf("Worker main\n");
+	printf("Worker main\n");
 
-  /* Start plugging your logic here */
-  while(!force_quit)
-    dpdk_poll();
+	/* Start plugging your logic here */
+	while (!force_quit)
+		dpdk_poll();
 
 	return 0;
 }
@@ -34,6 +36,8 @@ int main(int argc, char **argv)
 	int count, lcore_id, ret = 0;
 
 	printf("Hello world\n");
+	ebpf_module_init();
+	printf("init eBPF runtime success");
 
 	dpdk_init(&argc, &argv);
 
@@ -49,7 +53,7 @@ int main(int argc, char **argv)
 	RTE_LCORE_FOREACH_WORKER(lcore_id)
 	{
 		rte_eal_remote_launch(thread_main, (void *)(long)count,
-				      lcore_id);
+							  lcore_id);
 		count++;
 	}
 
@@ -57,7 +61,8 @@ int main(int argc, char **argv)
 
 	RTE_LCORE_FOREACH_WORKER(lcore_id)
 	{
-		if (rte_eal_wait_lcore(lcore_id) < 0) {
+		if (rte_eal_wait_lcore(lcore_id) < 0)
+		{
 			ret = -1;
 			break;
 		}

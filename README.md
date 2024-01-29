@@ -82,11 +82,7 @@ runtime/syscall-server/libbpftime-syscall-server.so ./target/release/xdp 1
 [2024-01-29 00:36:14][debug][239359] Loading program `xdp_pass` license `GPL` prog_type `6` attach_type 2755110320 map_type 6
 ```
 
-Expected the progs for eBPF:
-
-```console
-
-```
+Expected the progs for eBPF, see `documents/xdp_basic.json`
 
 
 ## Compile and run
@@ -98,10 +94,18 @@ git submodule update --init --recursive
 make dpdk
 ```
 
-To build the project:
+build bpftime library
+
+```sh
+cmake -B build-bpftime .
+make -C  build-bpftime
+```
+
+To build the dpdk-based server:
 
 ```sh
 export PKG_CONFIG_PATH=<the path of the pkgconfig directory inside dpdk>
+# e.g. export PKG_CONFIG_PATH=/home/yunwei37/dpdk-startingpoint/external/dpdk/install-dir/lib/x86_64-linux-gnu/pkgconfig
 make build
 ```
 

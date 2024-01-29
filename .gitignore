@@ -1,4 +1,5 @@
 *.swp
 *.o
-
+error.txt
 build/
+build-bpftime/

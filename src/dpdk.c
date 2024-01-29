@@ -138,6 +138,7 @@ void dpdk_poll(void)
   printf("I received packet\n");
 
   /* FIXME: Start your logic from here */
+  ebpf_module_run_at_handler(rx_pkts[0]->buf_addr, rx_pkts[0]->buf_len, NULL);
 }
 
 void dpdk_out(struct rte_mbuf *pkt)

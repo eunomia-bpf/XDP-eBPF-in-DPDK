@@ -9,7 +9,7 @@ all: $(TARGETS)
 
 OBJS_C := $(addprefix $(OBJDIR), $(patsubst %.c, %.o, $(shell ls $(SRCDIR))))
 
-CFLAGS += -g -O3 -I$(ROOTDIR)/inc -I$(DPDK_DIR)/install-dir/include
+CFLAGS += -g -O3 -I$(ROOTDIR)/inc -I$(DPDK_DIR)/install-dir/include -I$(ROOTDIR)/
 WERROR_FLAGS := -W -Wall -Wstrict-prototypes -Wmissing-prototypes
 WERROR_FLAGS += -Wmissing-declarations -Wold-style-definition -Wpointer-arith
 WERROR_FLAGS += -Wcast-align -Wnested-externs -Wcast-qual
@@ -20,7 +20,7 @@ WERROR_FLAGS += -Wundef -Wwrite-strings
 
 DPDK_LIBS := $(shell pkg-config --libs --static libdpdk)
 
-LDFLAGS = $(DPDK_LIBS) -lrt -lpthread -lm -ldl -lconfig -lnuma -lgcov
+LDFLAGS = -L$(ROOTDIR)/build-bpftime -lxdp-bpftime $(DPDK_LIBS) -lrt -lpthread -lm -ldl -lconfig -lnuma -lgcov -lstdc++
 
 $(info $(SRCDIR))
 $(info $(OBJS_C))
