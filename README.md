@@ -42,7 +42,7 @@ $ sudo cat /sys/kernel/debug/tracing/trace_pipe
 load into userspace:
 
 ```console
-$ SPDLOG_LEVEL=Debug LD_PRELOAD=/home/yunwei37/dpdk-startingpoint/build-bpftime/bpftime/runtime/syscall-server/libbpftime-syscall-server.so ./target/release/xdp 1
+$ sudo SPDLOG_LEVEL=Debug LD_PRELOAD=/home/yunwei37/dpdk-startingpoint/build-bpftime/bpftime/runtime/syscall-server/libbpftime-syscall-server.so ./target/release/xdp 1
 [2024-01-29 00:36:14.781] [info] [syscall_context.hpp:84] manager constructed
 [2024-01-29 00:36:14.782] [info] [syscall_server_utils.cpp:24] Initialize syscall server
 ...
