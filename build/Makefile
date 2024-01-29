@@ -20,7 +20,15 @@ WERROR_FLAGS += -Wundef -Wwrite-strings
 
 DPDK_LIBS := $(shell pkg-config --libs --static libdpdk)
 
-LDFLAGS = -L$(ROOTDIR)/build-bpftime -lxdp-bpftime $(DPDK_LIBS) -lrt -lpthread -lm -ldl -lconfig -lnuma -lgcov -lstdc++
+LDFLAGS =   -L$(ROOTDIR)/build-bpftime/bpftime/runtime  \
+			-L$(ROOTDIR)/build-bpftime \
+			-L$(ROOTDIR)/build-bpftime/bpftime/vm \
+			-L$(ROOTDIR)/build-bpftime/bpftime/third_party/spdlog \
+			-L$(ROOTDIR)/build-bpftime/bpftime/FridaGum-prefix/src/FridaGum/ \
+			-lruntime -lxdp-bpftime $(DPDK_LIBS) \
+			-lpthread -lm -ldl -lconfig -lnuma -lgcov -lstdc++ -lruntime \
+			-lvm-bpf -lspdlogd -lbpf \
+			-lfrida-gum -lpthread -lm -ldl -lz -lelf 
 
 $(info $(SRCDIR))
 $(info $(OBJS_C))

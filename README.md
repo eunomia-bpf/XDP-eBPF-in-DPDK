@@ -8,7 +8,6 @@ Use libbpf-bootsrap to load xdp program in userspace.
 
 libxdp requires a xdp dispatch program, which is more difficult to load into userspace.
 
-
 ```console
 $ sudo strace /home/yunwei37/dpdk-startingpoint/xdp-tutorial/basic01-xdp-pass/xdp_pass_user  --dev lo 2>syscall.txt
 Success: Loading XDP prog name:xdp_prog_simple(id:192) on device:lo(ifindex:1)
@@ -84,7 +83,6 @@ runtime/syscall-server/libbpftime-syscall-server.so ./target/release/xdp 1
 
 Expected the progs for eBPF, see `documents/xdp_basic.json`
 
-
 ## Compile and run
 
 To get and build dpdk from the root project directory:
@@ -97,6 +95,7 @@ make dpdk
 build bpftime library
 
 ```sh
+export PKG_CONFIG_PATH=<the path of the pkgconfig directory inside dpdk>
 cmake -B build-bpftime .
 make -C  build-bpftime
 ```
