@@ -4,18 +4,7 @@
 
 Use libbpf-bootsrap to load xdp program in userspace.
 
-## XDP example: xdp tutorial
-
-libxdp requires a xdp dispatch program, which is more difficult to load into userspace.
-
-```console
-$ sudo strace /home/yunwei37/dpdk-startingpoint/xdp-tutorial/basic01-xdp-pass/xdp_pass_user  --dev lo 2>syscall.txt
-Success: Loading XDP prog name:xdp_prog_simple(id:192) on device:lo(ifindex:1)
-```
-
-See ./documents/bpftime.md for userspace errors.
-
-## Get the syscall for load xdp
+### Get the syscall for load xdp
 
 `xdp` is an example written in Rust (using libbpf-rs). It attaches to
 the ingress path of networking device and logs the size of each packet,
@@ -80,11 +69,78 @@ $ sudo SPDLOG_LEVEL=Debug LD_PRELOAD=/home/yunwei37/dpdk-startingpoint/build-bpf
 [2024-01-29 00:36:14][debug][239359] Loading program `xdp_pass` license `GPL` prog_type `6` attach_type 2755110320 map_type 6
 ```
 
-Expected the progs for eBPF, see `documents/xdp_basic.json`
+Expected the progs for eBPF, see `documents/xdp_basic.json`.
+
+### run with xdp-basic
+
+```sh
+cd xdp-basic
+sudo SPDLOG_LEVEL=Debug LD_PRELOAD=/home/yunwei37/dpdk-startingpoint/build-bpftime/bpftime/runtime/syscall-server/libbpftime-syscall-server.so ./target/release/xdp 1
+```
+
+and start the dpdk server
+
+```sh
+$ sudo SPDLOG_LEVEL=Debug  /home/yunwei37/dpdk-startingpoint/build/base-server  -l 0 --vdev=net_tap0,iface=tapdpdk
+Hello world
+[2024-01-29 14:17:54.060] [info] [bpftime_shm_internal.cpp:617] Global shm constructed. shm_open_type 1 for bpftime_maps_shm
+...
+eth:    link up - speed 10000 Mbps, full-duplex
+There are 1 cores
+Worker main
+received packet, send data to eBPF module
+recived packet
+packet size: 90
+received packet, send data to eBPF module
+recived packet
+packet size: 90
+received packet, send data to eBPF module
+```
+
+### run with xdp-maps
+
+```sh
+cd xdp-maps
+sudo SPDLOG_LEVEL=Debug LD_PRELOAD=/home/yunwei37/dpdk-startingpoint/build-bpftime/bpftime/runtime/syscall-server/libbpftime-syscall-server.so ./target/release/xdp 1
+```
+
+and start the dpdk server
+
+```sh
+$ sudo SPDLOG_LEVEL=Debug  /home/yunwei37/dpdk-startingpoint/build/base-server  -l 0 --vdev=net_tap0,iface=tapdpdk
+...
+recived packet
+already recived 0 packets for size 90
+received packet, send data to eBPF module
+recived packet
+already recived 1 packets for size 90
+received packet, send data to eBPF module
+recived packet
+already recived 0 packets for size 86
+received packet, send data to eBPF module
+recived packet
+already recived 2 packets for size 90
+received packet, send data to eBPF module
+```
+
+These examples are using libbpf-rs to develop and load into kernel or userspace. It should be compatible with kernel xdp.
+
+## XDP example: xdp tutorial
+
+libxdp requires a xdp dispatch program, which is more difficult to load into userspace.
+
+```console
+$ sudo strace /home/yunwei37/dpdk-startingpoint/xdp-tutorial/basic01-xdp-pass/xdp_pass_user  --dev lo 2>syscall.txt
+Success: Loading XDP prog name:xdp_prog_simple(id:192) on device:lo(ifindex:1)
+```
+
+See ./documents/bpftime.md for userspace errors.
 
 ## Compile and run
 
 To get and build dpdk from the root project directory:
+
+(Also add bpftime in the directory)
 
 ```sh
 git submodule update --init --recursive
