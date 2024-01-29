@@ -23,26 +23,26 @@ void dpdk_init(int *argc, char ***argv)
 	struct rte_eth_link link;
 
 	const struct rte_eth_conf port_conf = {
-    .rxmode =
-    {
-      /* Disable next 2 fields for debugging on the tap interface */
-      //.mtu = RTE_ETHER_MAX_LEN,
-      //.offloads = DEV_RX_OFFLOAD_IPV4_CKSUM | DEV_RX_OFFLOAD_KEEP_CRC,
-      .mq_mode = RTE_ETH_MQ_RX_RSS,
-    },
-    .rx_adv_conf =
-    {
-      .rss_conf =
-      {
-        .rss_hf =
-          RTE_ETH_RSS_NONFRAG_IPV4_TCP | RTE_ETH_RSS_NONFRAG_IPV4_UDP,
-      },
-    },
-    .txmode =
-    {
-      .mq_mode = RTE_ETH_MQ_TX_NONE,
-    },
-  };
+		.rxmode =
+			{
+				/* Disable next 2 fields for debugging on the tap interface */
+				//.mtu = RTE_ETHER_MAX_LEN,
+				//.offloads = DEV_RX_OFFLOAD_IPV4_CKSUM | DEV_RX_OFFLOAD_KEEP_CRC,
+				.mq_mode = RTE_ETH_MQ_RX_RSS,
+			},
+		.rx_adv_conf =
+			{
+				.rss_conf =
+					{
+						.rss_hf =
+							RTE_ETH_RSS_NONFRAG_IPV4_TCP | RTE_ETH_RSS_NONFRAG_IPV4_UDP,
+					},
+			},
+		.txmode =
+			{
+				.mq_mode = RTE_ETH_MQ_TX_NONE,
+			},
+	};
 
 	ret = rte_eal_init(*argc, *argv);
 	if (ret < 0)
@@ -55,9 +55,9 @@ void dpdk_init(int *argc, char ***argv)
 
 	/* create the mbuf pool */
 	pktmbuf_pool = rte_pktmbuf_pool_create("mbuf_pool", NB_MBUF,
-					       MEMPOOL_CACHE_SIZE, 0,
-					       RTE_MBUF_DEFAULT_BUF_SIZE,
-					       rte_socket_id());
+										   MEMPOOL_CACHE_SIZE, 0,
+										   RTE_MBUF_DEFAULT_BUF_SIZE,
+										   rte_socket_id());
 	if (pktmbuf_pool == NULL)
 		rte_exit(EXIT_FAILURE, "Cannot init mbuf pool\n");
 
@@ -73,28 +73,30 @@ void dpdk_init(int *argc, char ***argv)
 	/* Configure the device */
 	ret = rte_eth_dev_configure(port_id, nb_rx_q, nb_tx_q, &port_conf);
 
-	for (i = 0; i < nb_rx_q; i++) {
+	for (i = 0; i < nb_rx_q; i++)
+	{
 		printf("setting up RX queues...\n");
 		ret = rte_eth_rx_queue_setup(port_id, i, nb_rx_desc,
-					     rte_eth_dev_socket_id(port_id),
-					     NULL, pktmbuf_pool);
+									 rte_eth_dev_socket_id(port_id),
+									 NULL, pktmbuf_pool);
 
 		if (ret < 0)
 			rte_exit(EXIT_FAILURE,
-				 "rte_eth_rx_queue_setup:err=%d, port=%u\n",
-				 ret, (unsigned)port_id);
+					 "rte_eth_rx_queue_setup:err=%d, port=%u\n",
+					 ret, (unsigned)port_id);
 	}
 
-	for (i = 0; i < nb_tx_q; i++) {
+	for (i = 0; i < nb_tx_q; i++)
+	{
 		printf("setting up TX queues...\n");
 		ret = rte_eth_tx_queue_setup(port_id, i, nb_tx_desc,
-					     rte_eth_dev_socket_id(port_id),
-					     NULL);
+									 rte_eth_dev_socket_id(port_id),
+									 NULL);
 
 		if (ret < 0)
 			rte_exit(EXIT_FAILURE,
-				 "rte_eth_tx_queue_setup:err=%d, port=%u\n",
-				 ret, (unsigned)port_id);
+					 "rte_eth_tx_queue_setup:err=%d, port=%u\n",
+					 ret, (unsigned)port_id);
 	}
 
 	/* start the device */
@@ -111,10 +113,8 @@ void dpdk_init(int *argc, char ***argv)
 		printf("eth:\tlink appears to be down, check connection.\n");
 	else
 		printf("eth:\tlink up - speed %u Mbps, %s\n",
-		       (uint32_t)link.link_speed,
-		       (link.link_duplex == RTE_ETH_LINK_FULL_DUPLEX) ?
-			       ("full-duplex") :
-			       ("half-duplex\n"));
+			   (uint32_t)link.link_speed,
+			   (link.link_duplex == RTE_ETH_LINK_FULL_DUPLEX) ? ("full-duplex") : ("half-duplex\n"));
 }
 
 void dpdk_terminate(void)
@@ -134,25 +134,31 @@ void dpdk_poll(void)
 	ret = rte_eth_rx_burst(0, RTE_PER_LCORE(queue_id), rx_pkts, BATCH_SIZE);
 	if (!ret)
 		return;
-
-  printf("received packet, send data to eBPF module\n");
-  if (rx_pkts[0]) {
-	uint64_t bpf_ret = 0;
-	struct xdp_md data;
-	data.data = rx_pkts[0]->buf_addr;
-	data.data_end = data.data + rx_pkts[0]->data_len;
-	/* FIXME: Start your logic from here */
-	ebpf_module_run_at_handler(&data, sizeof(data), &bpf_ret);
-  } else {
-	printf("skip packet\n");
-  }
+	for (int i = 0; i < ret; i++)
+	{
+		printf("received packet, send data to eBPF module\n");
+		if (rx_pkts[i])
+		{
+			uint64_t bpf_ret = 0;
+			struct xdp_md data;
+			data.data = rx_pkts[i]->buf_addr;
+			data.data_end = data.data + rx_pkts[i]->data_len;
+			/* FIXME: Start your logic from here */
+			ebpf_module_run_at_handler(&data, sizeof(data), &bpf_ret);
+		}
+		else
+		{
+			printf("skip packet\n");
+		}
+	}
 }
 
 void dpdk_out(struct rte_mbuf *pkt)
 {
 	int ret = 0;
 
-	while (1) {
+	while (1)
+	{
 		ret = rte_eth_tx_burst(0, RTE_PER_LCORE(queue_id), &pkt, 1);
 		if (ret == 1)
 			break;

@@ -1,13 +1,6 @@
 #include "vmlinux.h"
 #include <bpf/bpf_helpers.h>
 
-struct {
-	__uint(type, BPF_MAP_TYPE_HASH);
-	__uint(max_entries, 8192);
-	__type(key, pid_t);
-	__type(value, u64);
-} exec_start SEC(".maps");
-
 SEC("xdp")
 int xdp_pass(struct xdp_md *ctx)
 {

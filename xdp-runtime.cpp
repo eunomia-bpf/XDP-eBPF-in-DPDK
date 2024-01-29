@@ -39,7 +39,8 @@ extern "C" int ebpf_module_init()
     if (std::holds_alternative<bpf_prog_handler>(manager->get_handler(i)))
     {
       const auto &prog = std::get<bpf_prog_handler>(manager->get_handler(i));
-      // temp work around: we need to create new attach points in the runtim
+      // temp work around: we need to create new attach points in the runtime
+      // TODO: fix this hard code name
       if (prog.name == "xdp_pass")
       {
         ::prog = new bpftime_prog(prog.insns.data(), prog.insns.size(),
