@@ -1,0 +1,36 @@
+{
+    "4": {
+        "attr": {
+            "btf_id": 2,
+            "btf_key_type_id": 0,
+            "btf_value_type_id": 15,
+            "btf_vmlinux_value_type_id": 0,
+            "flags": 1152,
+            "ifindex": 0,
+            "kernel_bpf_map_id": 0,
+            "key_size": 4,
+            "map_extra": 0,
+            "map_type": 2,
+            "max_entries": 1,
+            "value_size": 16
+        },
+        "name": "xdppass_.rodata",
+        "type": "bpf_map_handler"
+    },
+    "5": {
+        "attr": {
+            "cnt": 9,
+            "insns": "611200000000000061130400000000001f2300000000000018210000040000000000000000000000b7020000100000008500000006000000b7000000020000009500000000000000",
+            "type": 508484497
+        },
+        "name": "xdp_pass",
+        "type": "bpf_prog_handler"
+    },
+    "6": {
+        "attr": {
+            "prog_fd": 5,
+            "target_fd": 1
+        },
+        "type": "bpf_link_handler"
+    }
+}

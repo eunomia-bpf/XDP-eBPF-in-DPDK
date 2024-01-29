@@ -4,3 +4,6 @@
 [submodule "xdp-tutorial"]
 	path = xdp-tutorial
 	url = https://github.com/xdp-project/xdp-tutorial
+[submodule "libbpf-bootstrap"]
+	path = libbpf-bootstrap
+	url = https://github.com/libbpf/libbpf-bootstrap
