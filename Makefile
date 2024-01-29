@@ -7,4 +7,9 @@ dpdk:
 	cd external/dpdk && meson --prefix $(DPDK_DIR)/install-dir -Dplatform=generic build && cd build && ninja && ninja install
 
 build:
+	make -C build-bpftime
+	# rm -f build/base-server
 	make -C build
+
+clean:
+	make -C build distclean

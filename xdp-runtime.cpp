@@ -49,6 +49,7 @@ extern "C" int ebpf_module_init()
         bpftime_helper_group::get_shm_maps_helper_group()
             .add_helper_group_to_prog(::prog);
         ::prog->bpftime_prog_load(false);
+        printf("load eBPF program xdp_pass\n");
         return 0;
       }
     }
@@ -59,6 +60,9 @@ extern "C" int ebpf_module_init()
 extern "C" int ebpf_module_run_at_handler(void *mem, uint64_t mem_size,
                                      uint64_t *ret)
 {
-  assert(prog != nullptr);
+  if (!prog) {
+    fprintf(stderr, "No prog found\n");
+    return 0;
+  }
   return prog->bpftime_prog_exec(mem, mem_size, ret);
 }

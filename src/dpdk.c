@@ -135,10 +135,12 @@ void dpdk_poll(void)
 	if (!ret)
 		return;
 
-  printf("I received packet\n");
-
+  printf("received packet, send data to eBPF module\n");
+  uint64_t bpf_ret = 0;
+  struct xdp_md data;
+	
   /* FIXME: Start your logic from here */
-  ebpf_module_run_at_handler(rx_pkts[0]->buf_addr, rx_pkts[0]->buf_len, NULL);
+  ebpf_module_run_at_handler(&data, sizeof(data), &bpf_ret);
 }
 
 void dpdk_out(struct rte_mbuf *pkt)

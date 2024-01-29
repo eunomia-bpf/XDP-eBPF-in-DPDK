@@ -38,7 +38,7 @@ $(OBJDIR)%.o: $(SRCDIR)%.c
 
 #### Applications ####
 
-base-server: $(OBJS_C) #netstack.a $(OBJDIR)/base-server.o
+base-server: $(OBJS_C) $(ROOTDIR)/build-bpftime/bpftime/runtime/libruntime.a #netstack.a $(OBJDIR)/base-server.o
 	cc -o $@ $^ $(LDFLAGS)
 
 clean:

@@ -37,7 +37,7 @@ int main(int argc, char **argv)
 
 	printf("Hello world\n");
 	ebpf_module_init();
-	printf("init eBPF runtime success");
+	printf("init eBPF runtime success\n");
 
 	dpdk_init(&argc, &argv);
 
